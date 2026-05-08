@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Gráfica - Gestão de Impressos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lexend Deca', sans-serif; background-color: #f0f0f0; padding-bottom: 50px; }
+        .neo-shadow { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
+        input, select, textarea { border: 3px solid black !important; padding: 12px; font-weight: bold; outline: none; width: 100%; }
+        input:focus { background-color: #CCFF00; }
+        label { font-weight: 900; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 4px; display: block; }
+        .card { background: white; border: 4px solid black; padding: 24px; margin-bottom: 24px; }
+        .grid-precos { display: grid; grid-template-cols: 1fr 1fr 1fr; gap: 10px; align-items: end; background: #fafafa; padding: 10px; border: 2px dashed black; margin-bottom: 10px; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <header class="max-w-6xl mx-auto mb-10 flex justify-between items-center">
+        <h1 class="text-4xl font-black uppercase bg-black text-[#CCFF00] inline-block px-4 py-2 neo-shadow">CMS Impressos</h1>
+        <a href="index.html" class="font-bold underline uppercase text-sm">Ver Site ↗</a>
+    </header>
+
+    <main class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            
+            <section>
+                <div class="card neo-shadow">
+                    <h2 class="font-black uppercase border-b-4 border-black mb-6 pb-2 italic text-2xl">⚙️ Definições</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label>Nome do Produto (Ex: Panfleto Couché 90g)</label>
+                            <input type="text" id="nome" placeholder="Ex: Cartão de Visita Premium">
+                        </div>
+                        <div>
+                            <label>Categoria (Isso aparecerá no menu lateral)</label>
+                            <input type="text" id="cat" placeholder="Ex: Cartões, Panfletos, Banners...">
+                        </div>
+                        <div>
+                            <label>Descrição do Produto</label>
+                            <textarea id="desc" class="h-20" placeholder="Detalhes técnicos para o cliente..."></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label>Tamanho</label>
+                                <input type="text" id="tamanho" placeholder="9x5cm">
+                            </div>
+                            <div>
+                                <label>Material</label>
+                                <input type="text" id="material" placeholder="Couché 300g">
+                            </div>
+                        </div>
+                        <div>
+                            <label>Acabamento Principal</label>
+                            <input type="text" id="acabamento" placeholder="Verniz Localizado">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="card neo-shadow">
+                    <h2 class="font-black uppercase border-b-4 border-black mb-6 pb-2 italic text-2xl">💰 Tabela de Preços</h2>
+                    
+                    <div id="container-precos">
+                        <div class="grid-precos">
+                            <div><label>Qtd</label><input type="text" class="p-qtd" value="1000"></div>
+                            <div><label>Preço base 4x0 (R$)</label><input type="number" class="p-4x0" value="0"></div>
+                            <div><label>Preço base 4x4 (R$)</label><input type="number" class="p-4x4" value="0"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="addLinha()" class="w-full border-2 border-black border-dashed py-2 font-black uppercase text-[10px] hover:bg-gray-100 mb-6">+ Adicionar Tiragem (Qtd)</button>
+
+                    <button onclick="salvar()" id="btn-salvar" class="w-full bg-[#CCFF00] text-black py-6 font-black text-2xl uppercase neo-shadow border-4 border-black hover:bg-black hover:text-[#CCFF00] transition-all">
+                        Publicar Produto
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="cms.js"></script>
+</body>
+</html>
