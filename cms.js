@@ -1,69 +1,82 @@
- const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbzo4SesUTXD9a2wqfNpsPQZGgtrEjZvfeVtq1Ps3XRmmc7g5SEwMZkqx4ni2-rZqAdZ/exec";
+const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbwjM-GL2uDMLIHl3E9bYBpseRzzZ_dUFmc8b94sHAw40KUIMtGyJuEro4qne6pDa-Kn/exec"; 
 
-        function addLinha() {
-            const html = `
-                <div class="grid-precos">
-                    <div><label>Qtd</label><input type="text" class="p-qtd"></div>
-                    <div><label>Preço 4x0 (R$)</label><input type="number" class="p-4x0"></div>
-                    <div><label>Preço 4x4 (R$)</label><input type="number" class="p-4x4"></div>
-                </div>`;
-            document.getElementById('container-precos').insertAdjacentHTML('beforeend', html);
+function addLinha() {
+    const html = `
+        <div class="grid-precos">
+            <div><label>Tamanho</label><input type="text" class="p-tam" placeholder="Ex: A4"></div>
+            <div><label>Qtd</label><input type="text" class="p-qtd" placeholder="500"></div>
+            <div><label>Custo (R$)</label><input type="number" class="p-custo" placeholder="0.00"></div>
+            <button onclick="this.parentElement.remove()" class="bg-black text-white h-[50px] font-bold">X</button>
+        </div>`;
+    document.getElementById('container-precos').insertAdjacentHTML('beforeend', html);
+}
+
+async function salvarProduto() {
+    const btn = document.getElementById('btn-salvar');
+    const nome = document.getElementById('nome').value;
+    const cat = document.getElementById('cat').value;
+    const desc = document.getElementById('desc').value;
+    const mat = document.getElementById('material').value;
+    const aca = document.getElementById('acabamento').value;
+    
+    if(!nome || !cat) return alert("Nome e Categoria são obrigatórios!");
+
+    btn.innerText = "⏳ PUBLICANDO...";
+    btn.disabled = true;
+
+    const linhas = document.querySelectorAll('.grid-precos');
+    let tree = {};
+    let listaTamanhos = [];
+    let listaQtds = [];
+
+    linhas.forEach(linha => {
+        const tam = linha.querySelector('.p-tam').value;
+        const qtd = linha.querySelector('.p-qtd').value;
+        const custo = parseFloat(linha.querySelector('.p-custo').value) || 0;
+
+        if (!tam || !qtd) return;
+
+        // Alimenta as listas de configuração para os filtros do site
+        if (!listaTamanhos.includes(tam)) listaTamanhos.push(tam);
+        if (!listaQtds.includes(qtd)) listaQtds.push(qtd);
+
+        // Monta a árvore: Preços -> Tamanho -> Material -> Cor (Fixo 4x0) -> Acabamento -> Qtd
+        if (!tree[tam]) tree[tam] = {};
+        if (!tree[tam][mat]) tree[tam][mat] = { "4x0": {} };
+        if (!tree[tam][mat]["4x0"][aca]) tree[tam][mat]["4x0"][aca] = {};
+
+        tree[tam][mat]["4x0"][aca][qtd] = custo;
+    });
+
+    const data = {
+        id: Date.now(),
+        nome: nome,
+        cat: cat,
+        desc: desc,
+        precos: tree,
+        config: {
+            tamanhos: listaTamanhos,
+            materiais: [mat],
+            cores: ["4x0"],
+            acabamentos: [aca],
+            quantidades: listaQtds
         }
+    };
 
-        async function salvar() {
-            const btn = document.getElementById('btn-salvar');
-            btn.innerText = "PROCESSANDO...";
-            btn.disabled = true;
-
-            const nome = document.getElementById('nome').value;
-            const cat = document.getElementById('cat').value.toLowerCase();
-            const desc = document.getElementById('desc').value;
-            const tam = document.getElementById('tamanho').value;
-            const mat = document.getElementById('material').value;
-            const aca = document.getElementById('acabamento').value;
-
-            // Coleta preços
-            const qtds = Array.from(document.querySelectorAll('.p-qtd')).map(i => i.value);
-            const p0 = Array.from(document.querySelectorAll('.p-4x0')).map(i => i.value);
-            const p4 = Array.from(document.querySelectorAll('.p-4x4')).map(i => i.value);
-
-            const tree = {};
-            tree[tam] = {};
-            tree[tam][mat] = { "4x0": {}, "4x4": {} };
-
-            qtds.forEach((q, i) => {
-                if(q) {
-                    tree[tam][mat]["4x0"][aca] = tree[tam][mat]["4x0"][aca] || {};
-                    tree[tam][mat]["4x0"][aca][q] = parseFloat(p0[i]);
-                    
-                    tree[tam][mat]["4x4"][aca] = tree[tam][mat]["4x4"][aca] || {};
-                    tree[tam][mat]["4x4"][aca][q] = parseFloat(p4[i]);
-                }
-            });
-
-            const data = {
-                id: Date.now(),
-                cat: cat,
-                nome: nome,
-                desc: desc,
-                impresso: true,
-                precos: tree,
-                config: {
-                    tamanhos: [tam],
-                    materiais: [mat],
-                    cores: ["4x0", "4x4"],
-                    acabamentos: [aca],
-                    quantidades: qtds.filter(q => q !== "")
-                }
-            };
-
-            try {
-                await fetch(URL_PLANILHA, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-                alert("Produto Publicado!");
-                location.reload();
-            } catch(e) {
-                alert("Erro ao salvar!");
-                btn.disabled = false;
-                btn.innerText = "Publicar Produto";
-            }
-        }
+    try {
+        await fetch(URL_PLANILHA, {
+            method: 'POST',
+            mode: 'no-cors', // Necessário para Google Scripts
+            body: JSON.stringify(data)
+        });
+        
+        alert("✅ PRODUTO SALVO! Ele aparecerá em ordem alfabética no site.");
+        location.reload();
+    } catch (e) {
+        alert("❌ Erro ao conectar com a planilha.");
+        console.error(e);
+    } finally {
+        btn.innerText = "🚀 Publicar Produto";
+        btn.disabled = false;
+    }
+}
