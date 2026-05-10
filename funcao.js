@@ -1,5 +1,5 @@
 const SEU_NUMERO = "5511999999999"; 
-const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbz8zE3lmEbrL_6_PaUvZVX_fFHiHeTHzqC6fXdyTsjfGtFaGmT0zdFdzii3aPVRmbXm/exec"; 
+const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbw80sAk-yNvulvVnaDlHEcKbCYmTIN0zwMuXDzYXCxUWVipViRHvKywFPHjorXedxMs/exec"; 
 let materiais = [];
 
 async function iniciarSite() {
