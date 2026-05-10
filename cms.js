@@ -1,4 +1,4 @@
-const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbwjM-GL2uDMLIHl3E9bYBpseRzzZ_dUFmc8b94sHAw40KUIMtGyJuEro4qne6pDa-Kn/exec"; 
+const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbw80sAk-yNvulvVnaDlHEcKbCYmTIN0zwMuXDzYXCxUWVipViRHvKywFPHjorXedxMs/exec"; 
 
 function addLinha() {
     const html = `
