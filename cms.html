@@ -1,74 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMS - Gerenciador de Produtos</title>
+    <meta charset="UTF-8"><title>CMS - Admin Gráfica</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Lexend Deca', sans-serif; background-color: #f0f0f0; }
-        .neo-shadow { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
-        .neo-shadow-sm { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
-        input, textarea, select { border: 3px solid black !important; padding: 12px; font-weight: bold; outline: none; width: 100%; transition: all 0.2s; }
-        input:focus { background-color: #CCFF00; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px 0px black; }
-        label { font-weight: 900; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 4px; display: block; color: #000; }
-        .card { background: white; border: 4px solid black; padding: 24px; }
-        .grid-precos { display: grid; grid-template-cols: 1.5fr 1fr 1fr 40px; gap: 10px; align-items: end; background: #fff; padding: 10px; border: 2px solid black; margin-bottom: 10px; }
+        body { font-family: 'Lexend Deca', sans-serif; background: #f0f0f0; }
+        .neo-shadow { box-shadow: 8px 8px 0px 0px #000; }
+        input, textarea { border: 3px solid #000 !important; padding: 12px; font-weight: bold; outline: none; width: 100%; }
+        input:focus { background: #CCFF00; }
+        .grid-precos { display: grid; grid-template-cols: 1.2fr 1fr 1fr 1fr 45px; gap: 10px; align-items: end; background: #fff; padding: 15px; border: 3px solid #000; margin-bottom: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-10">
-
-    <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6">
-        <h1 class="text-4xl font-black uppercase bg-black text-[#CCFF00] inline-block px-6 py-3 neo-shadow italic">Painel Admin</h1>
-        <a href="index.html" class="font-black underline uppercase text-sm border-4 border-black px-4 py-2 bg-white hover:bg-black hover:text-white transition-all neo-shadow-sm">⬅ Voltar ao Site</a>
-    </header>
-
-    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-black uppercase bg-black text-[#CCFF00] inline-block px-4 py-2 neo-shadow mb-10 italic">Painel de Custos</h1>
         
-        <div class="lg:col-span-2 space-y-6">
-            <div class="card neo-shadow">
-                <h2 class="text-xl font-black uppercase border-b-4 border-black mb-6 pb-2">📦 Informações</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div class="bg-white p-6 border-4 border-black neo-shadow">
+                <h2 class="font-black uppercase border-b-4 border-black mb-4 pb-2">📦 Dados do Produto</h2>
                 <div class="space-y-4">
-                    <div><label>Nome do Produto</label><input type="text" id="nome" placeholder="Ex: Panfleto Couché"></div>
-                    <div><label>Categoria</label><input type="text" id="cat" placeholder="Ex: Impressos"></div>
-                    <div><label>Descrição Curta</label><textarea id="desc" class="h-24" placeholder="Detalhes que aparecem no card..."></textarea></div>
+                    <input type="text" id="nome" placeholder="Nome do Produto">
+                    <input type="text" id="cat" placeholder="Categoria (Ex: Cartões)">
+                    <textarea id="desc" placeholder="Descrição curta..." class="h-24"></textarea>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label>Material</label><input type="text" id="material" value="Couché 300g"></div>
-                        <div><label>Acabamento</label><input type="text" id="acabamento" value="Verniz Total"></div>
+                        <input type="text" id="mat" value="Couché 300g">
+                        <input type="text" id="aca" value="Verniz Total">
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="lg:col-span-3 space-y-6">
-            <div class="card neo-shadow">
-                <div class="flex justify-between items-center border-b-4 border-black mb-6 pb-2">
-                    <h2 class="text-xl font-black uppercase">💰 Tabela de Custos</h2>
-                    <span class="text-[10px] bg-red-500 text-white px-2 py-1 font-bold">CUSTO BRUTO (O SISTEMA SOMA 30% DEPOIS)</span>
-                </div>
-                
+            <div class="bg-white p-6 border-4 border-black neo-shadow">
+                <h2 class="font-black uppercase border-b-4 border-black mb-4 pb-2">💰 Tabela de Custos (Brutos)</h2>
                 <div id="container-precos">
                     <div class="grid-precos">
-                        <div><label>Tamanho</label><input type="text" class="p-tam" placeholder="A5"></div>
-                        <div><label>Qtd</label><input type="text" class="p-qtd" placeholder="1000"></div>
-                        <div><label>Custo (R$)</label><input type="number" class="p-custo" placeholder="0.00"></div>
-                        <button onclick="this.parentElement.remove()" class="bg-black text-white h-[50px] font-bold">X</button>
+                        <div><label class="text-[10px] font-black">TAMANHO</label><input type="text" class="p-tam" placeholder="9x5cm"></div>
+                        <div><label class="text-[10px] font-black">QTD</label><input type="text" class="p-qtd" placeholder="1000"></div>
+                        <div><label class="text-[10px] font-black">4x0 (R$)</label><input type="number" class="p-4x0"></div>
+                        <div><label class="text-[10px] font-black">4x4 (R$)</label><input type="number" class="p-4x4"></div>
+                        <button onclick="this.parentElement.remove()" class="bg-red-500 text-white h-[50px] border-2 border-black font-bold">X</button>
                     </div>
                 </div>
-
-                <button onclick="addLinha()" class="w-full border-4 border-black border-dashed py-3 font-black uppercase text-sm mt-2 hover:bg-gray-100 transition-all">+ Adicionar Variação</button>
-
-                <div class="mt-10">
-                    <button onclick="salvarProduto()" id="btn-salvar" class="w-full bg-[#CCFF00] text-black py-6 font-black text-3xl uppercase neo-shadow border-4 border-black hover:bg-black hover:text-[#CCFF00] active:translate-y-1 transition-all">
-                        🚀 Publicar Produto
-                    </button>
-                </div>
+                <button onclick="addLinha()" class="w-full border-2 border-black border-dashed py-2 font-black mt-4 hover:bg-gray-100">+ Add Linha</button>
+                <button onclick="salvar()" id="btn" class="w-full bg-[#CCFF00] text-black py-4 font-black text-2xl uppercase border-4 border-black neo-shadow mt-6 hover:bg-black hover:text-[#CCFF00] transition-all">Publicar Catalogo</button>
             </div>
         </div>
+    </div>
 
-    </main>
+    <script>
+        const URL = "https://script.google.com/macros/s/AKfycbz8zE3lmEbrL_6_PaUvZVX_fFHiHeTHzqC6fXdyTsjfGtFaGmT0zdFdzii3aPVRmbXm/exec";
 
-    <script src="cms.js"></script>
+        function addLinha() {
+            const html = `<div class="grid-precos">
+                <div><input type="text" class="p-tam"></div>
+                <div><input type="text" class="p-qtd"></div>
+                <div><input type="number" class="p-4x0"></div>
+                <div><input type="number" class="p-4x4"></div>
+                <button onclick="this.parentElement.remove()" class="bg-red-500 text-white h-[50px] border-2 border-black font-bold">X</button>
+            </div>`;
+            document.getElementById('container-precos').insertAdjacentHTML('beforeend', html);
+        }
+
+        async function salvar() {
+            const btn = document.getElementById('btn');
+            btn.innerText = "SALVANDO...";
+            
+            const mat = document.getElementById('mat').value;
+            const aca = document.getElementById('aca').value;
+            const linhas = document.querySelectorAll('.grid-precos');
+            
+            let tree = {}; let listT = []; let listQ = [];
+
+            linhas.forEach(l => {
+                const tam = l.querySelector('.p-tam').value;
+                const qtd = l.querySelector('.p-qtd').value;
+                const v0 = parseFloat(l.querySelector('.p-4x0').value) || 0;
+                const v4 = parseFloat(l.querySelector('.p-4x4').value) || 0;
+
+                if(!listT.includes(tam)) listT.push(tam);
+                if(!listQ.includes(qtd)) listQ.push(qtd);
+
+                if(!tree[tam]) tree[tam] = {};
+                if(!tree[tam][mat]) tree[tam][mat] = {"4x0":{}, "4x4":{}};
+                if(!tree[tam][mat]["4x0"][aca]) tree[tam][mat]["4x0"][aca] = {};
+                if(!tree[tam][mat]["4x4"][aca]) tree[tam][mat]["4x4"][aca] = {};
+
+                tree[tam][mat]["4x0"][aca][qtd] = v0;
+                tree[tam][mat]["4x4"][aca][qtd] = v4;
+            });
+
+            const data = {
+                id: Date.now(),
+                nome: document.getElementById('nome').value,
+                cat: document.getElementById('cat').value,
+                desc: document.getElementById('desc').value,
+                precos: tree,
+                config: { tamanhos: listT, materiais: [mat], cores: ["4x0", "4x4"], acabamentos: [aca], quantidades: listQ }
+            };
+
+            await fetch(URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+            alert("Sucesso!"); location.reload();
+        }
+    </script>
 </body>
 </html>
